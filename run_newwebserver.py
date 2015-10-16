@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 # A program to run a new instance on AWS
+# will also perform several tasks and maintenance functions
 # Stephen Coady
 # 20064122
 
