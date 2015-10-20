@@ -23,32 +23,47 @@ def new_server():
   instance = reservation.instances[0]
   instance.add_tag('Name', instance_name)
   instance.update()
+  print("Instance started. Please wait while the machine boots up.")
+  time.sleep(30)
+  print("Almost there!")
+  time.sleep(30)
+  print("Just a little while longer, promise!")
+  time.sleep(30)
 
 
 def terminate_server():
+  if reservation == None :
+    print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
 
-  print(len(reservation.instances))
+  else :
+    print(len(reservation.instances))
 
-  if len(reservation.instances) > 0 :
-    for x in range(0, len(reservation.instances)) :
-      print(str(x) + ": " + str(reservation.instances[x]))
-      decision = input("Would you like to terminate one of these servers? (y/n) ")
-      if decision == 'y' :
-        number = input("Please enter the number of the instane you wish to terminate")
-        if number > 0 and number < len(reservation.instances) :
-          reservation.instances[number].terminate()
+    if len(reservation.instances) > 0 :
+      for x in range(0, len(reservation.instances)) :
+        print(str(x) + ": " + str(reservation.instances[x]))
+        decision = input("Would you like to terminate one of these servers? (y/n) ")
+        if decision == 'y' :
+          number = input("Please enter the number of the instance you wish to terminate: ")
+          if int(number) < len(reservation.instances) :
+            reservation.instances[int(number)].terminate()
+            print("Successfully terminated")
 
 def install_nginx():
-  print(reservation.instances[0].public_dns_name)
+  if reservation == None :
+    print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
+  else :
+    print(reservation.instances[0].public_dns_name)
 
 # Define a main() function.
 def main():
   decision = None
   while decision != 0:
+    print(' ')
     print('1) Create instance')
     print('2) Terminate instance')
     print('3) Install nginx')
     print('0) Exit')
+    print(' ')
     decision = input("Please enter your choice >>> ")
     if decision == '1':
       new_server()
