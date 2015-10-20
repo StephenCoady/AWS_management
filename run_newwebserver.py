@@ -23,18 +23,32 @@ def new_server():
   instance = reservation.instances[0]
   instance.add_tag('Name', instance_name)
   instance.update()
-  print("Instance started. Please wait while the machine boots up.")
-  time.sleep(30)
-  print("Almost there!")
-  time.sleep(30)
-  print("Just a little while longer, promise!")
-  time.sleep(30)
+
+  print('Starting instance. This may take a moment.')
+  while instance.state != 'running' :
+    time.sleep(2)
+    instance.update()
+
+  print("Running!")
 
 
 def terminate_server():
   if reservation == None :
     print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
+    answer = input("Would you like to see other reservations you have running? (y/n) ")
+    if answer == 'y' :
+      reservations = conn.get_all_instances()
+      instances = []
+      for r in reservations:
+        instances.extend(r.instances)
 
+      my_instances = []
+      for x in instances:
+        if x.key_name == private_key_name :
+          my_instances.append(x)
+
+      for i in range (0, len(my_instances)) :
+        print(my_instances[i])
   else :
     print(len(reservation.instances))
 
