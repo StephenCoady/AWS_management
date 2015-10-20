@@ -29,8 +29,14 @@ def terminate_server():
 
   print(len(reservation.instances))
 
-  for x in range(0, len(reservation.instances)) :
-    print(str(x) + ": " + str(reservation.instances[x]))
+  if len(reservation.instances) > 0 :
+    for x in range(0, len(reservation.instances)) :
+      print(str(x) + ": " + str(reservation.instances[x]))
+      decision = input("Would you like to terminate one of these servers? (y/n) ")
+      if decision == 'y' :
+        number = input("Please enter the number of the instane you wish to terminate")
+        if number > 0 and number < len(reservation.instances) :
+          reservation.instances[number].terminate()
 
 def install_nginx():
   print(reservation.instances[0].public_dns_name)
@@ -54,6 +60,6 @@ def main():
       exit()
 
   
-# This is the standard boilerplate that calls the main() function.
+# main method
 if __name__ == '__main__':
   main()
