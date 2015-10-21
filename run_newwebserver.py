@@ -18,6 +18,7 @@ instance = None
 start_time = time.time()
 
 def new_server():
+  print('Starting instance. This may take a moment.')
   conn = boto.ec2.connect_to_region('eu-west-1')
   global reservation 
   reservation = conn.run_instances('ami-69b9941e', key_name = private_key_name, instance_type = 't2.micro', security_groups = ['witsshrdp'])
@@ -41,8 +42,6 @@ def terminate_server():
     if answer == 'y' :
       view_all_instances()
   else :
-    print(len(reservation.instances))
-
     if len(reservation.instances) > 0 :
       for x in range(0, len(reservation.instances)) :
         print(str(x) + ": " + str(reservation.instances[x]))
@@ -52,6 +51,7 @@ def terminate_server():
           if int(number) < len(reservation.instances) :
             reservation.instances[int(number)].terminate()
             print("Successfully terminated")
+  
 
 def install_nginx():
   if reservation == None :
@@ -69,6 +69,7 @@ def install_nginx():
         time.sleep(10)
         print("...")
       install_nginx()
+  
 
 def view_all_instances():
   reservations = conn.get_all_instances()
@@ -83,6 +84,7 @@ def view_all_instances():
 
   for i in range (0, len(my_instances)) :
     print(str(i) + ": " + my_instances[i].tags["Name"] + " " + my_instances[i].state)
+  
 
 def copy_web_script():
   if reservation == None :
@@ -100,6 +102,7 @@ def copy_web_script():
       print(output)
       permission = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + \
       " 'chmod 700 check_webserver.py'"
+      install_python()
     else :
       print("It doesn't look like the SSH service is started yet. Please wait. ")
       while (time.time() - start_time) < 90 :
@@ -107,19 +110,28 @@ def copy_web_script():
         print("...")
       copy_web_script()
 
+def install_python():
+  dns = reservation.instances[0].public_dns_name
+  py = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " 'sudo yum -y install python34'"
+  (status, output) = subprocess.getstatusoutput(py)
+  print(output)
 
 # Define a main() function.
 def main():
   decision = None
-  while decision != 0:
-    print(' ')
-    print('1) Create instance')
-    print('2) Terminate instance')
-    print('3) Install nginx')
-    print('4) View a list of instances created by you')
-    print('5) Copy check_webserver script to instance')
-    print('0) Exit')
-    print(' ')
+  while decision != '0':
+    print('')
+    print('|==============================================|')
+    print('|                  Main Menu                   |')
+    print('|==============================================|')
+    print('| 1) Create instance                           |')
+    print('| 2) Terminate instance                        |')
+    print('| 3) Install nginx                             |')
+    print('| 4) View a list of instances created by you   |')
+    print('| 5) Copy check_webserver script to instance   |')
+    print('| 0) Exit                                      |')
+    print('|______________________________________________|')
+    print('')
     decision = input("Please enter your choice >>> ")
     if decision == '1':
       new_server()
@@ -131,10 +143,7 @@ def main():
       view_all_instances()
     if decision =='5':
       copy_web_script()
-    if decision == '0':
-      exit()
-
-  
+  print("Exiting, cya!")
 # main method
 if __name__ == '__main__':
   main()
