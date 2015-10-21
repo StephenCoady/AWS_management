@@ -8,12 +8,14 @@
 import boto
 import boto.ec2
 import time
+import subprocess
 
 instance_name = 'GA_StephenCoady'
 private_key_name = 'stephencoady'
 conn = boto.ec2.connect_to_region('eu-west-1')
 reservation = None
 instance = None
+start_time = time.time()
 
 def new_server():
   conn = boto.ec2.connect_to_region('eu-west-1')
@@ -35,20 +37,9 @@ def new_server():
 def terminate_server():
   if reservation == None :
     print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
-    answer = input("Would you like to see other reservations you have running? (y/n) ")
+    answer = input("Would you like to see other instances you have running? (y/n) ")
     if answer == 'y' :
-      reservations = conn.get_all_instances()
-      instances = []
-      for r in reservations:
-        instances.extend(r.instances)
-
-      my_instances = []
-      for x in instances:
-        if x.key_name == private_key_name :
-          my_instances.append(x)
-
-      for i in range (0, len(my_instances)) :
-        print(my_instances[i])
+      view_all_instances()
   else :
     print(len(reservation.instances))
 
@@ -66,7 +57,56 @@ def install_nginx():
   if reservation == None :
     print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
   else :
-    print(reservation.instances[0].public_dns_name)
+    if (time.time() - start_time) > 90 :
+      print("Installing nginx...")
+      dns = reservation.instances[0].public_dns_name
+      command = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " 'sudo yum -y install nginx'"
+      (status, output) = subprocess.getstatusoutput(command)
+      print(output)
+    else :
+      print("It doesn't look like the SSH service is started yet. Please wait. ")
+      while (time.time() - start_time) < 90 :
+        time.sleep(10)
+        print("...")
+      install_nginx()
+
+def view_all_instances():
+  reservations = conn.get_all_instances()
+  instances = []
+  for r in reservations:
+    instances.extend(r.instances)
+
+  my_instances = []
+  for x in instances:
+    if x.key_name == private_key_name :
+      my_instances.append(x)
+
+  for i in range (0, len(my_instances)) :
+    print(str(i) + ": " + my_instances[i].tags["Name"] + " " + my_instances[i].state)
+
+def copy_web_script():
+  if reservation == None :
+    print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
+  else :
+    if (time.time() - start_time) > 90 :
+      print("Copying script...")
+      dns = reservation.instances[0].public_dns_name
+      command = "scp -i stephencoady.pem check_webserver.py ec2-user@" + dns + ":"
+      (status, output) = subprocess.getstatusoutput(command)
+      print(output)
+      print("Current directory: ")
+      ls = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " 'ls'"
+      (status, output) = subprocess.getstatusoutput(ls)
+      print(output)
+      permission = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + \
+      " 'chmod 700 check_webserver.py'"
+    else :
+      print("It doesn't look like the SSH service is started yet. Please wait. ")
+      while (time.time() - start_time) < 90 :
+        time.sleep(10)
+        print("...")
+      copy_web_script()
+
 
 # Define a main() function.
 def main():
@@ -76,6 +116,8 @@ def main():
     print('1) Create instance')
     print('2) Terminate instance')
     print('3) Install nginx')
+    print('4) View a list of instances created by you')
+    print('5) Copy check_webserver script to instance')
     print('0) Exit')
     print(' ')
     decision = input("Please enter your choice >>> ")
@@ -85,6 +127,10 @@ def main():
       terminate_server()
     if decision =='3':
       install_nginx()
+    if decision =='4':
+      view_all_instances()
+    if decision =='5':
+      copy_web_script()
     if decision == '0':
       exit()
 
