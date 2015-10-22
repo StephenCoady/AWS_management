@@ -1,0 +1,11 @@
+----------------------------------------------------------------------
+-                        ERROR LOG FILE                              -
+----------------------------------------------------------------------
+| 22/10/2015 | 15:05:09 |  User tried to use SSH before it was ready.
+| 22/10/2015 | 15:40:52 |  User tried to use SSH before it was ready.
+| 22/10/2015 | 15:43:11 |  User tried to use SSH before it was ready.
+| 22/10/2015 | 15:44:48 |  User tried to use SSH before it was ready.
+| 22/10/2015 | 15:53:12 |  User tried to use SSH before it was ready.
+| 22/10/2015 | 16:03:37 |  User tried to use SSH before it was ready.
+| 22/10/2015 | 16:07:54 |  User tried to use SSH before it was ready.
+| 22/10/2015 | 16:10:53 |  User tried to use SSH before it was ready.

@@ -7,17 +7,15 @@
 import subprocess
 import os
 cmd = 'ps -A | grep nginx'
+running = "RUNNING"
+not_running = "NOT RUNNING"
 (status, output) = subprocess.getstatusoutput(cmd)
 
 def nginx_check():
     if (status > 0):
-      print("NOT RUNNING")
-      response = input('Would you like to start the nginx server? (y/n) ')
-      if response == 'y':
-        os.system('sudo service nginx start')
+      return(not_running)
     else:
-      print("RUNNING")
-
+      return(running)
 
 # Define a main() function.
 def main():

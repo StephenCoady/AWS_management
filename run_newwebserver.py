@@ -8,7 +8,8 @@
 import boto
 import boto.ec2
 import time
-import subprocess
+import logger
+import ssh
 
 instance_name = 'GA_StephenCoady'
 private_key_name = 'stephencoady'
@@ -27,7 +28,6 @@ def new_server():
   instance.add_tag('Name', instance_name)
   instance.update()
 
-  print('Starting instance. This may take a moment.')
   while instance.state != 'running' :
     time.sleep(2)
     instance.update()
@@ -60,16 +60,20 @@ def install_nginx():
     if (time.time() - start_time) > 90 :
       print("Installing nginx...")
       dns = reservation.instances[0].public_dns_name
-      command = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " 'sudo yum -y install nginx'"
-      (status, output) = subprocess.getstatusoutput(command)
+      (status, output) = ssh.connect(dns, "sudo yum -y install nginx")
       print(output)
     else :
       print("It doesn't look like the SSH service is started yet. Please wait. ")
+      logger.error_log("User tried to use SSH service when it was not ready.")
       while (time.time() - start_time) < 90 :
         time.sleep(10)
         print("...")
       install_nginx()
   
+def run_nginx_check():
+  dns = reservation.instances[0].public_dns_name
+  (status, output) = ssh.connect(dns, "sudo python3 check_webserver.py")
+  print(output)
 
 def view_all_instances():
   reservations = conn.get_all_instances()
@@ -93,18 +97,16 @@ def copy_web_script():
     if (time.time() - start_time) > 90 :
       print("Copying script...")
       dns = reservation.instances[0].public_dns_name
-      command = "scp -i stephencoady.pem check_webserver.py ec2-user@" + dns + ":"
-      (status, output) = subprocess.getstatusoutput(command)
+      (status, output) = ssh.copy(dns, "check_webserver.py")
       print(output)
       print("Current directory: ")
-      ls = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " 'ls'"
-      (status, output) = subprocess.getstatusoutput(ls)
+      (status, output) = ssh.connect(dns, "ls")
       print(output)
-      permission = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + \
-      " 'chmod 700 check_webserver.py'"
+      (status, output) = ssh.connect(dns, "chmod 700 check_webserver.py")
+      print(output)
       install_python()
     else :
-      print("It doesn't look like the SSH service is started yet. Please wait. ")
+      logger.ssh_not_ready()
       while (time.time() - start_time) < 90 :
         time.sleep(10)
         print("...")
@@ -112,8 +114,7 @@ def copy_web_script():
 
 def install_python():
   dns = reservation.instances[0].public_dns_name
-  py = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " 'sudo yum -y install python34'"
-  (status, output) = subprocess.getstatusoutput(py)
+  (status, output) = ssh.connect(dns, "sudo yum -y install python34")
   print(output)
 
 # Define a main() function.
@@ -129,6 +130,7 @@ def main():
     print('| 3) Install nginx                             |')
     print('| 4) View a list of instances created by you   |')
     print('| 5) Copy check_webserver script to instance   |')
+    print('| 6) Run nginx checking script                 |')
     print('| 0) Exit                                      |')
     print('|______________________________________________|')
     print('')
@@ -143,7 +145,9 @@ def main():
       view_all_instances()
     if decision =='5':
       copy_web_script()
-  print("Exiting, cya!")
+    if decision =='6':
+      run_nginx_check()
+  print("Exit called.")
 # main method
 if __name__ == '__main__':
   main()
