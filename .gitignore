@@ -2,3 +2,4 @@
 *.pdf
 *.log
 example.txt
+__pycache__/

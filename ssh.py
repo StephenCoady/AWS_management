@@ -7,8 +7,8 @@
 import subprocess
 
 def connect(dns, cmd):
-  ls = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " " + cmd
-  (status, output) = subprocess.getstatusoutput(ls)
+  command = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " " + cmd
+  (status, output) = subprocess.getstatusoutput(command)
   return (status, output)
 
 def copy(dns, file):

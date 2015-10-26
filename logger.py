@@ -7,8 +7,7 @@
 
 from time import strftime
 
-def error_log(error):
+def status_log(message):
   date_time = strftime("| %d/%m/%Y | %H:%M:%S | ")
-  
   with open("output.txt", "a") as text_file:
-    print(str(date_time) + " " + error, file=text_file)
+    print(str(date_time) + " " + message, file=text_file)

@@ -9,3 +9,44 @@
 | 22/10/2015 | 16:03:37 |  User tried to use SSH before it was ready.
 | 22/10/2015 | 16:07:54 |  User tried to use SSH before it was ready.
 | 22/10/2015 | 16:10:53 |  User tried to use SSH before it was ready.
+| 23/10/2015 | 16:27:33 |  User tried to use SSH service when it was not ready.
+| 23/10/2015 | 16:30:43 |  User tried to use SSH service when it was not ready.
+| 23/10/2015 | 16:52:22 |  User tried to use SSH service when it was not ready.
+| 26/10/2015 | 10:28:49 |  User tried to use SSH service when it was not ready.
+| 26/10/2015 | 10:31:40 |  User tried to use SSH service when it was not ready.
+| 26/10/2015 | 11:56:00 |  Can't connect using ssh. 
+| 26/10/2015 | 11:56:00 |  Can't connect using ssh. 
+| 26/10/2015 | 11:56:01 |  Can't connect using ssh. 
+| 26/10/2015 | 11:57:51 |  SSH not ready. (copy_web_script())
+| 26/10/2015 | 11:58:55 |  Can't connect using ssh. 
+| 26/10/2015 | 11:58:56 |  Can't connect using ssh. 
+| 26/10/2015 | 11:58:57 |  Can't connect using ssh. 
+| 26/10/2015 | 12:01:30 |  Can't connect using ssh. 
+| 26/10/2015 | 12:01:42 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:04 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:15 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:24 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:31 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:37 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:41 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:45 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:50 |  Can't connect using ssh. 
+| 26/10/2015 | 12:02:55 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:00 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:02 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:11 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:19 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:22 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:25 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:29 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:33 |  Can't connect using ssh. 
+| 26/10/2015 | 12:03:37 |  Can't connect using ssh. 
+| 26/10/2015 | 12:07:50 |  Can't connect using ssh. Error message: 
+| 26/10/2015 | 12:07:50 |  ssh: connect to host ec2-52-30-233-231.eu-west-1.compute.amazonaws.com port 22: Connection refused
+lost connection
+| 26/10/2015 | 15:03:41 |  User tried to stop an instance already terminated
+| 26/10/2015 | 15:30:50 |  User tried to use SSH service when it was not ready.
+| 26/10/2015 | 15:45:53 |  SSH not ready. (copy_web_script())
+| 26/10/2015 | 15:59:09 |  User tried to use SSH service when it was not ready.
+| 26/10/2015 | 19:28:52 |  Python not installed correctly.
+| 26/10/2015 | 19:51:49 |  SSH not ready. (copy_web_script())

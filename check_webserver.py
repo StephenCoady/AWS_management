@@ -6,6 +6,8 @@
 
 import subprocess
 import os
+import sys
+
 cmd = 'ps -A | grep nginx'
 running = "RUNNING"
 not_running = "NOT RUNNING"
@@ -13,9 +15,11 @@ not_running = "NOT RUNNING"
 
 def nginx_check():
     if (status > 0):
-      return(not_running)
+      print(not_running)
+      sys.exit(1)
     else:
-      return(running)
+      print(running)
+
 
 # Define a main() function.
 def main():

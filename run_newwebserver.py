@@ -10,20 +10,26 @@ import boto.ec2
 import time
 import logger
 import ssh
+import menu
 
 instance_name = 'GA_StephenCoady'
 private_key_name = 'stephencoady'
 conn = boto.ec2.connect_to_region('eu-west-1')
 reservation = None
 instance = None
+my_instances = None
 start_time = time.time()
 
+
+def set_pem_key(pem_key):
+  private_key_name = pem_key
+
 def new_server():
+  global reservation
+  global instance
+
   print('Starting instance. This may take a moment.')
-  conn = boto.ec2.connect_to_region('eu-west-1')
-  global reservation 
   reservation = conn.run_instances('ami-69b9941e', key_name = private_key_name, instance_type = 't2.micro', security_groups = ['witsshrdp'])
-  global instance 
   instance = reservation.instances[0]
   instance.add_tag('Name', instance_name)
   instance.update()
@@ -32,50 +38,80 @@ def new_server():
     time.sleep(2)
     instance.update()
 
-  print("Running!")
+  print("\nRunning!")
 
 
 def terminate_server():
-  if reservation == None :
-    print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
-    answer = input("Would you like to see other instances you have running? (y/n) ")
-    if answer == 'y' :
-      view_all_instances()
-  else :
-    if len(reservation.instances) > 0 :
-      for x in range(0, len(reservation.instances)) :
-        print(str(x) + ": " + str(reservation.instances[x]))
-        decision = input("Would you like to terminate one of these servers? (y/n) ")
-        if decision == 'y' :
-          number = input("Please enter the number of the instance you wish to terminate: ")
-          if int(number) < len(reservation.instances) :
-            reservation.instances[int(number)].terminate()
-            print("Successfully terminated")
-  
+  global instance
+  try :
+    if instance.state == 'terminated' :
+      print('Instance already terminated!')
+      logger.status_log("User tried to stop an instance already terminated")
+    else :
+      decision = input("Are you sure you wish to terminate this instance? (y/n) ")
+      if decision == 'y':
+        instance.terminate();
+        print("Instance terminated!")
+      else :
+        print("Termination aborted! Instance is safe...for now.")
+  except :
+    logger.status_log("Error terminating instance: " + instance)
+
+def start_server():
+  global instance
+  try :
+    if instance.state == 'terminated':
+      print("Sorry, this instance is terminated. RIP.")
+    else :
+      if instance.state == 'running' :
+        print('Instance already running!')
+        logger.status_log("User tried to start an instance already running")
+      else :
+        instance.start();
+        print("Instance started!")
+  except :
+    logger.status_log("Error starting instance: " + instance)
+
+def stop_server():
+  global instance
+  if running_check() :
+    try :
+      if instance.state == 'terminated':
+        print("Sorry, this instance is terminated. RIP.")
+      else :
+        if instance.state == 'stopped' :
+          print('Instance already stopped!')
+          logger.status_log("User tried to stop an instance already stopped")
+        else :
+          instance.stop();
+          print("Instance stopped!")
+    except :
+      logger.status_log("Error starting instance: " + instance)
 
 def install_nginx():
-  if reservation == None :
-    print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
-  else :
+  global instance
+  if running_check() :
     if (time.time() - start_time) > 90 :
       print("Installing nginx...")
-      dns = reservation.instances[0].public_dns_name
+      dns = instance.public_dns_name
       (status, output) = ssh.connect(dns, "sudo yum -y install nginx")
-      print(output)
+      if status > 0:
+        print("Something went wrong. Check error log for information.")
+        logger.status_log("Can't install nging using SSH. Error message: ")
+        logger.status_log(output)
+      else : 
+        print("Nginx successfully installed on instance.")
     else :
       print("It doesn't look like the SSH service is started yet. Please wait. ")
-      logger.error_log("User tried to use SSH service when it was not ready.")
+      logger.status_log("User tried to use SSH service when it was not ready.")
       while (time.time() - start_time) < 90 :
         time.sleep(10)
         print("...")
       install_nginx()
-  
-def run_nginx_check():
-  dns = reservation.instances[0].public_dns_name
-  (status, output) = ssh.connect(dns, "sudo python3 check_webserver.py")
-  print(output)
 
 def view_all_instances():
+  global my_instances
+
   reservations = conn.get_all_instances()
   instances = []
   for r in reservations:
@@ -85,69 +121,124 @@ def view_all_instances():
   for x in instances:
     if x.key_name == private_key_name :
       my_instances.append(x)
-
+  print()
+  print("No Name            Status  Time Started")
+  print("---------------------------------------")
   for i in range (0, len(my_instances)) :
-    print(str(i) + ": " + my_instances[i].tags["Name"] + " " + my_instances[i].state)
-  
+    print(str(i) + ": " + my_instances[i].tags["Name"] + " " + my_instances[i].state + " " + my_instances[i].launch_time)
+  print("\n")
 
 def copy_web_script():
-  if reservation == None :
-    print("Sorry, it doesn't seem like you started any instances yet! Please create one.")
-  else :
+  global instance
+  if running_check() :
     if (time.time() - start_time) > 90 :
       print("Copying script...")
-      dns = reservation.instances[0].public_dns_name
+      dns = instance.public_dns_name
+      
       (status, output) = ssh.copy(dns, "check_webserver.py")
-      print(output)
-      print("Current directory: ")
-      (status, output) = ssh.connect(dns, "ls")
-      print(output)
+      
+      if status > 0:
+        logger.status_log("Can't connect using ssh. Error message: ")
+        logger.status_log(output)
+        print("Something isn't quite right. Please try again.")
+        return
+      
+      else :
+        (status, output) = ssh.connect(dns, "ls")
+        print("Current directory: ")
+        print(output)
+      
       (status, output) = ssh.connect(dns, "chmod 700 check_webserver.py")
-      print(output)
-      install_python()
     else :
-      logger.ssh_not_ready()
+      logger.status_log("SSH not ready. (copy_web_script())")
+      print("Sorry, SSH doesn't seem to be running yet. Please wait while it starts.")
       while (time.time() - start_time) < 90 :
         time.sleep(10)
         print("...")
       copy_web_script()
 
+def run_nginx_check():
+  global instance
+  if running_check() :
+    dns = instance.public_dns_name
+    (status, output) = ssh.connect(dns, "sudo python3 check_webserver.py")
+    if "command not found" in output:
+      print("It doesn't look like you've installed python, please try that first.")
+    elif "No such file" in output:
+      print("It doesn't look like you've copied the file to the instance, please try that first.")
+    else :
+      print(output)
+      if status > 0 :
+        choice = input("Would you like to start nginx? (y/n) ")
+        if choice == 'y' :
+          (stat, out) = ssh.connect(dns, "sudo service nginx start")
+          if "unrecognized service" in out:
+            print("It doesn't look like you've installed nginx, please try that first.")
+          run_nginx_check()
+        else :
+          print("Nginx not started.")
+
+
 def install_python():
-  dns = reservation.instances[0].public_dns_name
+  global instance
+  dns = instance.public_dns_name
   (status, output) = ssh.connect(dns, "sudo yum -y install python34")
-  print(output)
+  if status == 0:
+    print("Python installed successfully!")
+  else :
+    logger.status_log("Python not installed correctly.")
+    try_again = input("Oops, something wen't wrong installing python. Try again? (y/n) ")
+    if try_again == 'y':
+      install_python()
+
+def running_check():
+  global instance
+  if instance.state == 'running':
+    return True
+  else :
+    print("Instance not running yet, please make sure it is running and then try again.")
+    return False
 
 # Define a main() function.
 def main():
+  menu.start_menu()
   decision = None
+  submenu = None
   while decision != '0':
-    print('')
-    print('|==============================================|')
-    print('|                  Main Menu                   |')
-    print('|==============================================|')
-    print('| 1) Create instance                           |')
-    print('| 2) Terminate instance                        |')
-    print('| 3) Install nginx                             |')
-    print('| 4) View a list of instances created by you   |')
-    print('| 5) Copy check_webserver script to instance   |')
-    print('| 6) Run nginx checking script                 |')
-    print('| 0) Exit                                      |')
-    print('|______________________________________________|')
-    print('')
+    menu.main_menu()
+    submenu = None
     decision = input("Please enter your choice >>> ")
     if decision == '1':
       new_server()
     if decision == '2':
-      terminate_server()
-    if decision =='3':
-      install_nginx()
-    if decision =='4':
+      print("Gathering information about your instances, please wait.")
       view_all_instances()
-    if decision =='5':
-      copy_web_script()
-    if decision =='6':
-      run_nginx_check()
+      global my_instances
+      if my_instances != None :
+        instance_choice = input("Please enter the number of the instance you wish to manage (x to cancel) >>> ")
+      else :
+        print("You have no instances, please create one first.")
+      global instance
+      if instance_choice != 'x' :
+        instance = my_instances[int(instance_choice)]
+        while submenu != '0':
+          menu.instance_manager()
+          submenu = input("Please enter your choice >>> ")
+          if submenu == '1':
+            start_server()
+          if submenu == '2':
+            stop_server()
+          if submenu == '3':
+            terminate_server()
+          if submenu == '4':
+            install_python()
+          if submenu == '5':
+            install_nginx()
+          if submenu == '6':
+            copy_web_script()
+          if submenu == '7':
+            run_nginx_check()
   print("Exit called.")
-# main method
+
 if __name__ == '__main__':
   main()
