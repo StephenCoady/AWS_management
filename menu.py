@@ -1,13 +1,14 @@
-#!/usr/bin/python3
-
 def start_menu():
-  print('\n|==============================================|')
-  print('|                  AWS Manager                 |')
-  print('|==============================================|')
-  print('| Welcome to AWS Manager. A program to help    |')
-  print('| you manage your AWS instances.               |')
-  print('|                                              |')
-  print('|______________________________________________|\n')
+  print('\n################################################')
+  print('#                  AWS Manager                 #')
+  print('################################################')
+  print('# Welcome to AWS Manager. A program to help    #')
+  print('# you manage your AWS instances.               #')
+  print('# Please enter the name of you .pem key below, #')
+  print('# without the extension and ensure it is in    #')
+  print('# the current directory.                       #')
+  print('#                                              #')
+  print('################################################\n')
 
 def main_menu():
   print('\n|==============================================|')
@@ -43,5 +44,9 @@ def instance_manager():
   print('| 5) Install nginx                             |')
   print('| 6) Copy check_webserver script to instance   |')
   print('| 7) Run nginx checking script                 |')
+  print('| 8) Run your own command on this instance     |')
+  print('| 9) View html of nginx server landing page    |')
+  print('| 10) View nginx access logs                   |')
+  print('| 11) View nginx error logs                    |')
   print('| 0) Return                                    |')
   print('|______________________________________________|\n')

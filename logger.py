@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
-# This class will simply allow the user to see one message
-# while also printing an activity monitor for the developer
+# This class will simply print an activity monitor for the developer
 # Stephen Coady
 # 20064122
 

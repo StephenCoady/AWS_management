@@ -11,9 +11,10 @@ import time
 import logger
 import ssh
 import menu
+import subprocess
+import os
 
-instance_name = 'GA_StephenCoady'
-private_key_name = 'stephencoady'
+private_key_name = None
 conn = boto.ec2.connect_to_region('eu-west-1')
 reservation = None
 instance = None
@@ -27,7 +28,11 @@ def set_pem_key(pem_key):
 def new_server():
   global reservation
   global instance
-
+  print("Please enter the name you would like to call the instance,") 
+  print("leave blank for the default.")
+  instance_name = input(">>> ")
+  if instance_name == "":
+    instance_name = 'GA_StephenCoady'
   print('Starting instance. This may take a moment.')
   reservation = conn.run_instances('ami-69b9941e', key_name = private_key_name, instance_type = 't2.micro', security_groups = ['witsshrdp'])
   instance = reservation.instances[0]
@@ -109,6 +114,7 @@ def install_nginx():
         print("...")
       install_nginx()
 
+
 def view_all_instances():
   global my_instances
 
@@ -121,12 +127,17 @@ def view_all_instances():
   for x in instances:
     if x.key_name == private_key_name :
       my_instances.append(x)
-  print()
-  print("No Name            Status  Time Started")
-  print("---------------------------------------")
-  for i in range (0, len(my_instances)) :
-    print(str(i) + ": " + my_instances[i].tags["Name"] + " " + my_instances[i].state + " " + my_instances[i].launch_time)
-  print("\n")
+
+  if len(my_instances) == 0:
+    print("No instances associated with this key. Please ensure it is the")
+    print("correct key or that you have created some first.")
+  else :
+    print()
+    print("No Name            Status  Time Started")
+    print("---------------------------------------")
+    for i in range (0, len(my_instances)) :
+      print(str(i) + ": " + my_instances[i].tags["Name"] + " " + my_instances[i].state + " " + my_instances[i].launch_time)
+    print("\n")
 
 def copy_web_script():
   global instance
@@ -181,15 +192,62 @@ def run_nginx_check():
 
 def install_python():
   global instance
-  dns = instance.public_dns_name
-  (status, output) = ssh.connect(dns, "sudo yum -y install python34")
-  if status == 0:
-    print("Python installed successfully!")
-  else :
-    logger.status_log("Python not installed correctly.")
-    try_again = input("Oops, something wen't wrong installing python. Try again? (y/n) ")
-    if try_again == 'y':
-      install_python()
+  if running_check() :
+    dns = instance.public_dns_name
+    (status, output) = ssh.connect(dns, "sudo yum -y install python34")
+    if status == 0:
+      print("Python installed successfully!")
+    else :
+      logger.status_log("Python not installed correctly.")
+      try_again = input("Oops, something wen't wrong installing python. Try again? (y/n) ")
+      if try_again == 'y':
+        install_python()
+
+def run_user_command():
+  global instance
+  if running_check():
+    dns = instance.public_dns_name
+    command = None
+    print("Please use x to exit the python terminal. ")
+    sudo = input("Would you like to emulate the terminal? (y/n) >>> ")
+    while command != 'x':
+      command = input("Please enter the command you wish to run, don't forget to include -y to accept changes if necessary >>> ")
+      if command !='x':
+        if sudo == 'y':
+          cmd = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " " + command
+          print(os.system(cmd))
+        else :
+          cmd = "ssh -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " " + command
+          print(os.system(cmd))
+
+def visit_website():
+  global instance
+  if running_check():
+    dns = instance.public_dns_name
+    (status, output) = subprocess.getstatusoutput("curl " + dns)
+    if "Connection refused" in output :
+      print("Looks the nginx server isn't running. Please start it.")
+      logger.status_log("Connection refused to " + dns + ". ")
+    else :
+      print(output)
+
+def view_access_log():
+  global instance
+  if running_check():
+    dns = instance.public_dns_name
+    ssh.connect(dns, "sudo chmod 777 /var/log/nginx")
+    cmd = "nano /var/log/nginx/access.log"
+    command = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " " + cmd
+    print(os.system(command))
+
+def view_error_log():
+  global instance
+  if running_check():
+    dns = instance.public_dns_name
+    ssh.connect(dns, "sudo chmod 777 /var/log/nginx")
+    cmd = "nano /var/log/nginx/error.log"
+    command = "ssh -t -o StrictHostKeyChecking=no -i stephencoady.pem ec2-user@" + dns + " " + cmd
+    print(os.system(command))
 
 def running_check():
   global instance
@@ -197,11 +255,17 @@ def running_check():
     return True
   else :
     print("Instance not running yet, please make sure it is running and then try again.")
+    logger.status_log("User tried to access non-running instance.")
     return False
 
 # Define a main() function.
 def main():
   menu.start_menu()
+  global private_key_name 
+  print("Please enter key name, or leave blank for the default (stephencoady)")
+  private_key_name = input(" >>> ")
+  if private_key_name == "" :
+    private_key_name = "stephencoady"
   decision = None
   submenu = None
   while decision != '0':
@@ -238,6 +302,14 @@ def main():
             copy_web_script()
           if submenu == '7':
             run_nginx_check()
+          if submenu == '8':
+            run_user_command()
+          if submenu == '9':
+            visit_website()
+          if submenu == '10':
+            view_access_log()
+          if submenu == '11':
+            view_error_log()
   print("Exit called.")
 
 if __name__ == '__main__':
