@@ -1,6 +1,4 @@
-#!/usr/bin/python3
-
-# This class will simply print an activity monitor for the developer
+# This module will simply print an activity monitor for the developer
 # Stephen Coady
 # 20064122
 

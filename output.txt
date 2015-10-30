@@ -35,3 +35,104 @@ lost connection
 | 29/10/2015 | 17:27:40 |  Python not installed correctly.
 | 29/10/2015 | 17:27:46 |  Can't install nging using SSH. Error message: 
 | 29/10/2015 | 17:27:46 |  ssh: connect to host ec2-52-30-21-223.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 29/10/2015 | 20:09:02 |  view_all_instances method failed.
+| 29/10/2015 | 20:42:31 |  view_all_instances method failed.
+| 30/10/2015 | 11:05:33 |  User tried to access non-running instance.
+| 30/10/2015 | 11:05:37 |  User tried to access non-running instance.
+| 30/10/2015 | 11:05:39 |  User tried to access non-running instance.
+| 30/10/2015 | 11:05:47 |  User tried to access non-running instance.
+| 30/10/2015 | 11:05:49 |  User tried to access non-running instance.
+| 30/10/2015 | 11:05:51 |  User tried to access non-running instance.
+| 30/10/2015 | 11:06:07 |  User tried to access non-running instance.
+| 30/10/2015 | 11:06:15 |  User tried to access non-running instance.
+| 30/10/2015 | 11:06:16 |  User tried to access non-running instance.
+| 30/10/2015 | 11:06:20 |  User tried to access non-running instance.
+| 30/10/2015 | 11:07:06 |  User tried to use SSH service when it was not ready.
+| 30/10/2015 | 12:39:17 |  User tried to use SSH service when it was not ready.
+| 30/10/2015 | 12:42:16 |  User tried to use SSH service when it was not ready.
+| 30/10/2015 | 12:51:28 |  view_all_instances method failed.
+| 30/10/2015 | 13:04:14 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:21 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:22 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:23 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:23 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:24 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:25 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:26 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:27 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:27 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:28 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:29 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:29 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:30 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:30 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:31 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:37 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:38 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:39 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:39 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:40 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:40 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:41 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:41 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:42 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:42 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:43 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:43 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:44 |  User tried to access non-running instance.
+| 30/10/2015 | 13:04:44 |  User tried to access non-running instance.
+| 30/10/2015 | 13:05:07 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 13:05:07 |  
+The system is going down for halt in 2 minutes!
+
+Connection closed by 52.31.76.244
+| 30/10/2015 | 13:59:57 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 13:59:57 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:02 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:02 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:05 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:05 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:07 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:07 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:08 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:08 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:09 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:09 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:11 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:11 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:12 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:12 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:13 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:13 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:14 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:14 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:15 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:15 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:16 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:16 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:18 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:18 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:00:19 |  Can't install nginx using SSH. Error message: 
+| 30/10/2015 | 14:00:19 |  ssh: connect to host ec2-52-30-178-171.eu-west-1.compute.amazonaws.com port 22: Connection refused
+| 30/10/2015 | 14:42:22 |  Error starting instance
+| 30/10/2015 | 14:46:50 |  invalid literal for int() with base 10: 'e'
+| 30/10/2015 | 14:47:40 |  invalid literal for int() with base 10: 'e'
+| 30/10/2015 | 14:48:17 |  invalid literal for int() with base 10: 'f'
+| 30/10/2015 | 14:48:40 |  running_check method failed. Most likely an internet connection error.
+| 30/10/2015 | 14:48:42 |  running_check method failed. Most likely an internet connection error.
+| 30/10/2015 | 14:48:45 |  running_check method failed. Most likely an internet connection error.
+| 30/10/2015 | 14:51:20 |  list index out of range
+| 30/10/2015 | 15:11:49 |  User tried to access non-running instance.
+| 30/10/2015 | 15:11:54 |  User tried to access non-running instance.
+| 30/10/2015 | 15:11:56 |  User tried to access non-running instance.
+| 30/10/2015 | 15:12:10 |  list index out of range
+| 30/10/2015 | 15:37:43 |  Python not installed correctly.
+| 30/10/2015 | 15:37:46 |  Python not installed correctly.
+| 30/10/2015 | 15:37:49 |  Python not installed correctly.
+| 30/10/2015 | 15:37:51 |  Python not installed correctly.
+| 30/10/2015 | 15:39:39 |  view_error_log method failed. Error: connect() missing 1 required positional argument: 'cmd'
+| 30/10/2015 | 15:39:45 |  view_error_log method failed. Error: connect() missing 1 required positional argument: 'cmd'
+| 30/10/2015 | 15:48:24 |  view_all_instances method failed. Error: The read operation timed out
+| 30/10/2015 | 15:48:24 |  int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+| 30/10/2015 | 15:49:41 |  User tried to access non-running instance.
+| 30/10/2015 | 15:49:45 |  User tried to access non-running instance.
